@@ -1,5 +1,6 @@
 const express = require('express');
 const connectDB = require('./config/db');
+var cors = require('cors')
 
 const app = express();
 
@@ -7,7 +8,7 @@ const app = express();
 connectDB();
 
 //Init Middleware
-app.use(express.json({ extended: false }))
+app.use(express.json({ extended: false }), cors());
 
 app.get('/', (req, res) => 
   res.json({msg: 'Welcome to the ContactKeeper Api...'})
