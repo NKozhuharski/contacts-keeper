@@ -53,8 +53,13 @@ const getContacts = async (contact) => {
     }
   };
 // Delete Contact
-  const deleteContact = (id) => {
-    dispatch({ type: DELETE_CONTACT, payload: id });
+  const deleteContact = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/contacts/${id}`);
+      dispatch({ type: DELETE_CONTACT, payload: id });
+    } catch (err) {
+      dispatch({type: CONTACT_ERROR, payload: err.response.data.msg})
+    }
   };
   // Clear Contacts
   const clearContacts = () => {
@@ -69,8 +74,18 @@ const getContacts = async (contact) => {
     dispatch({ type: CLEAR_CURRENT });
   };
 // Update Contact
-  const updateContact = (contact) => {
-    dispatch({ type: UPDATE_CONTACT, payload: contact });
+  const updateContact = async (contact) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+    try {
+      const res = await axios.put(`http://localhost:5000/api/contacts/${contact._id}`, contact, config);
+      dispatch({ type: UPDATE_CONTACT, payload: res.data });
+    } catch (err) {
+      dispatch({type: CONTACT_ERROR, payload: err.response.data.msg})
+    }
   };
 // Filter Contacts
   const filterContacts = (text) => {
